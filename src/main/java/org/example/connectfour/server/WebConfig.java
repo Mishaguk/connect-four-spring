@@ -8,7 +8,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:5173", "https://connect-four-client-6kihkfms9-mishaguks-projects.vercel.app")
+                .allowedOrigins("http://localhost:5173", "https://connect-four-client-6kihkfms9-mishaguks-projects.vercel.app", "https://connect-four-client.vercel.app", "https://connect-four-client-git-main-mishaguks-projects.vercel.app")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);
