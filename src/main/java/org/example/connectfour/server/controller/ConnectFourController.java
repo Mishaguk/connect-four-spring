@@ -4,6 +4,8 @@
     import org.example.connectfour.connectFour.core.Cell;
     import org.example.connectfour.connectFour.core.Game;
     import org.springframework.http.HttpStatus;
+    import org.springframework.scheduling.annotation.EnableScheduling;
+    import org.springframework.scheduling.annotation.Scheduled;
     import org.springframework.web.bind.annotation.*;
     import org.springframework.web.server.ResponseStatusException;
 
@@ -13,6 +15,7 @@
 
     @RestController
     @RequestMapping("api/connectFour")
+    @EnableScheduling
     public class ConnectFourController {
 
         private final Map<String, Game> games = new ConcurrentHashMap<>();
@@ -48,7 +51,17 @@
             game.playBotTurn();
             return getJSONFormat(game);
         }
+        @Scheduled(fixedRate = 60000)
+        public void clearInactiveGames() {
+            long now = System.currentTimeMillis();
+            games.entrySet().removeIf(entry -> now - entry.getValue().getLastActive() > 5*60 * 1000);
+        }
 
+        @PostMapping("/keepalive")
+        public void keepAlive(@RequestParam("gameId") String gameId) {
+            Game game = games.get(gameId);
+            game.updateLastActive();
+        }
         private Map<String, Object> getJSONFormat(Game game) {
             Map<String, Object> response = new HashMap<>();
             response.put("board", getBoard(game.getBoard()));

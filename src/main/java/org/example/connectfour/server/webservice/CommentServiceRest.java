@@ -15,7 +15,8 @@ public class CommentServiceRest {
     private CommentService commentService;
 
     @GetMapping("/{game}")
-    public List<Comment> getTopScores(@PathVariable String game) {
+    public List<Comment> getComments(@PathVariable String game)  {
+        System.out.println(game);
         return commentService.getComments(game);
     }
 

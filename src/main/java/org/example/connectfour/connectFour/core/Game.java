@@ -12,6 +12,8 @@ public class Game {
     private final BotPlayer botPlayer;
     private final boolean playingWithBot;
     public static String GAME_TITLE = "connectFour";
+    @Getter
+    private long lastActive;
 
     private int moveCount = 0;
     public Game(Board board, boolean playingWithBot, int botDifficulty) {
@@ -20,8 +22,12 @@ public class Game {
         this.gameState = GameState.PLAYING;
         this.playingWithBot = playingWithBot;
         this.botPlayer = playingWithBot ? new BotPlayer(Player.PLAYER_TWO, botDifficulty) : null; // in default case bot play as PLAYER_TWO
+        updateLastActive();
     }
 
+    public void updateLastActive() {
+        lastActive = System.currentTimeMillis();
+    }
 
     public boolean isGameOver() {
         return gameState != GameState.PLAYING && gameState != GameState.WAITING_FOR_PLAYER;
@@ -37,6 +43,8 @@ public class Game {
             Cell lastCell = board.placePiece(currentPlayer, column);
             if (lastCell == null) return false;
             moveCount++;
+            System.out.println(lastActive);
+            updateLastActive();
             if (board.isWinner(currentPlayer, lastCell)) {
                 gameState = currentPlayer == Player.PLAYER_ONE ? GameState.PLAYER_ONE_WON : GameState.PLAYER_TWO_WON;
             } else if (board.isDraw()) {
@@ -54,7 +62,7 @@ public class Game {
         if (playingWithBot && currentPlayer == Player.PLAYER_TWO) {
             int column = botPlayer.getBestMove(board);
             makeMove(column);
-            System.out.println("Bot played in column " + column);
+            updateLastActive();
             return true;
         }
         return false;
