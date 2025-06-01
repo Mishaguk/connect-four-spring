@@ -43,7 +43,6 @@ public class Game {
             Cell lastCell = board.placePiece(currentPlayer, column);
             if (lastCell == null) return false;
             moveCount++;
-            System.out.println(lastActive);
             updateLastActive();
             if (board.isWinner(currentPlayer, lastCell)) {
                 gameState = currentPlayer == Player.PLAYER_ONE ? GameState.PLAYER_ONE_WON : GameState.PLAYER_TWO_WON;
